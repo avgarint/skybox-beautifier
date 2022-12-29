@@ -126,10 +126,14 @@ async function processSkyboxTexture(path, faceSize, savePath, layout) {
         {width: faceSize, height: faceSize, left: faceSize, top: faceSize * 2}, // Bottom
     ];
 
+    const start = Date.now();
+
     for(let i = 0; i < otpions.length; i++) {    
         sharp(path).extract(otpions[i]).toFile(`${savePath}\\${i}.png`)
             .then(() => {
+                const end = Date.now();
                 spinner.success({text: `Success! Saved image faces at ${savePath}`});
+                console.log(chalk.blueBright(`Process took ${end - start} ms`));
                 process.exit(0);
             })
             .catch((err) => {
