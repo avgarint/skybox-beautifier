@@ -1,2 +1,1 @@
-- Take layout in account
 - Debug rendering
