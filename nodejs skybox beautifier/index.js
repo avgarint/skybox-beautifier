@@ -6,20 +6,35 @@ import chalkAnimation from "chalk-animation";
 import figlet from "figlet";
 import { createSpinner } from "nanospinner";
 import sharp from "sharp";
+import path from "path";
 
 const indexToFaceName = {
-    0: "Left",
-    1: "Front",
-    2: "Right",
-    3: "Back",
-    4: "Top",
-    5: "Bottom"
+  0: "Left",
+  1: "Front",
+  2: "Right",
+  3: "Back",
+  4: "Top",
+  5: "Bottom"
 };
 
-const layouts = [
-    "Top/Up face above front face and bottom/down face below front face",
-    "Top/up face above right face and bottom/down face below right face"
-];
+const layouts = {
+  "Top/Up face above front face and bottom/down face below front face": [
+    { left: 0, top: 1 },
+    { left: 1, top: 1 },
+    { left: 2, top: 1 },
+    { left: 3, top: 1 },
+    { left: 1, top: 0 },
+    { left: 1, top: 2 },
+  ],
+  "Top/up face above right face and bottom/down face below right face": [
+    { left: 0, top: 1 },
+    { left: 1, top: 1 },
+    { left: 2, top: 1 },
+    { left: 3, top: 1 },
+    { left: 2, top: 0 },
+    { left: 2, top: 2 },
+  ]
+};
 
 /**
  * Sleeps for ms miliseconds (default is 2000).
@@ -32,26 +47,26 @@ const sleep = (ms = 2000) => new Promise((r) => setTimeout(r, ms));
  * Show the welcome messages.
  */
 async function welcome() {
-    figlet("Skybox Beautifier", (err, data) => {
-        if(err) {
-            console.log(err);
-            return;
-        }
+  figlet("Skybox Beautifier", (err, data) => {
+    if(err) {
+      console.log(err);
+      return;
+    }
 
-        console.log(gradient.pastel.multiline(data));
-    });
+    console.log(gradient.pastel.multiline(data));
+  });
 
-    await sleep();
+  await sleep();
 
-    const welcomeMessage = chalkAnimation.rainbow(
-        "Hello, I'm here to help you convert a skybox texture to multiple faces!"
-    );
+  const welcomeMessage = chalkAnimation.rainbow(
+    "Hello, I'm here to help you convert a skybox texture to multiple faces!"
+  );
 
-    welcomeMessage.start();
+  welcomeMessage.start();
         
-    await sleep();
+  await sleep();
 
-    welcomeMessage.stop();
+  welcomeMessage.stop();
 }
 
 /**
@@ -59,13 +74,13 @@ async function welcome() {
  * @returns path
  */
 async function askPath() {
-    const prompt = await inquirer.prompt({
-        name: "path",
-        type: "input",
-        message: "Select the texture path:"
-    });
+  const prompt = await inquirer.prompt({
+    name: "path",
+    type: "input",
+    message: "Select the texture path:"
+  });
 
-    return prompt.path;
+  return prompt.path;
 }
 
 /**
@@ -73,13 +88,13 @@ async function askPath() {
  * @returns faceSize
  */
 async function askFaceSize() {
-    const prompt = await inquirer.prompt({
-        name: "face_size",
-        type: "number",
-        message: "Select face size:"
-    });
+  const prompt = await inquirer.prompt({
+    name: "face_size",
+    type: "number",
+    message: "Select face size:"
+  });
 
-    return prompt.face_size;
+  return prompt.face_size;
 }
 
 /**
@@ -87,13 +102,13 @@ async function askFaceSize() {
  * @returns savePath
  */
 async function askSavePath() {
-    const prompt =  await inquirer.prompt({
-        name: "save_directory",
-        type: "input",
-        message: "Select the save directory:"
-    });
+  const prompt =  await inquirer.prompt({
+    name: "save_directory",
+    type: "input",
+    message: "Select the save directory:"
+  });
 
-    return prompt.save_directory;
+  return prompt.save_directory;
 }
 
 /**
@@ -101,14 +116,14 @@ async function askSavePath() {
  * @returns layout
  */
 async function askLayout() {
-    const prompt = await inquirer.prompt({
-        name: "layout",
-        type: "list",
-        message: "Select the texture layout:",
-        choices: layouts
-    });
+  const prompt = await inquirer.prompt({
+    name: "layout",
+    type: "list",
+    message: "Select the texture layout:",
+    choices: Object.keys(layouts)
+  });
 
-    return prompt.layout;
+  return prompt.layout;
 }
 
 /**
@@ -116,15 +131,15 @@ async function askLayout() {
  * @returns confirmation
  */
 async function askConfirmation(data) {
-    printParameters(data);
+  printParameters(data);
 
-    const prompt = await inquirer.prompt({
-        name: "confirmation",
-        type: "confirm",
-        message: "Confirm all parameters are correct?",
-    });
+  const prompt = await inquirer.prompt({
+    name: "confirmation",
+    type: "confirm",
+    message: "Confirm all parameters are correct?",
+  });
 
-    return prompt.confirmation;
+  return prompt.confirmation;
 }
 
 /**
@@ -132,13 +147,16 @@ async function askConfirmation(data) {
  * @param {object} parameters 
  */
 function printParameters(parameters) {
-    console.log(
-        chalk.bgCyanBright("Processing image with following parameters:")
-    );
+  if (typeof parameters !== 'object' || parameters === null) {
+    console.error('Invalid input parameter. Expected an object.');
+    return;
+  }
 
-    for (const [key, value] of Object.entries(parameters)) {
-        console.log(chalk.bgCyanBright(`• ${key}: ${value}`));
-    }
+  console.log(chalk.bgCyanBright('Processing image with following parameters:'));
+
+  Object.keys(parameters).forEach((key) => {
+    console.log(chalk.bgCyanBright(`• ${key}: ${parameters[key]}`));
+  });
 }
 
 /**
@@ -148,32 +166,10 @@ function printParameters(parameters) {
  * @returns 
  */
 function layoutToOptions(faceSize, layout) {
-    const base = { width: faceSize, height: faceSize };
+  const options = layouts[layout];
+  const base = { width: faceSize, height: faceSize };
 
-    switch(layout) {
-        case layouts[0]:
-            return [
-                { ...base, left: 0, top: faceSize },            // Left
-                { ...base, left: faceSize, top: faceSize },     // Front
-                { ...base, left: faceSize * 2, top: faceSize }, // Right
-                { ...base, left: faceSize * 3, top: faceSize }, // Back
-                { ...base, left: faceSize, top: 0 },            // Top/up
-                { ...base, left: faceSize, top: faceSize * 2 }, // Bottom/down
-            ];
-        
-        case layouts[1]:
-            return [
-                { ...base, left: 0, top: faceSize },                // Left
-                { ...base, left: faceSize, top: faceSize },         // Front
-                { ...base, left: faceSize * 2, top: faceSize },     // Right
-                { ...base, left: faceSize * 3, top: faceSize },     // Back
-                { ...base, left: faceSize * 2, top: 0 },            // Top/up
-                { ...base, left: faceSize * 2, top: faceSize * 2 }, // Bottom/down
-            ];
-
-        default:
-            break;
-    }
+  return options.map(({ left, top }) => ({ ...base, left: left * faceSize, top: top * faceSize }));
 }
 
 /**
@@ -182,30 +178,30 @@ function layoutToOptions(faceSize, layout) {
  * @param {object} data
  */
 async function processTexture(data) {
-    const spinner = createSpinner("Processing, do not interrupt...").start();
-    const options = layoutToOptions(data.faceSize, data.layout);
+  const spinner = createSpinner("Processing, do not interrupt...").start();
+  const options = layoutToOptions(data.faceSize, data.layout);
 
+  try {
     await sleep();
 
     const start = Date.now();
 
-    for(let i = 0; i < options.length; i++) {
-        const fileName = `${data.savePath}\\${indexToFaceName[i]}.png`;
+    await Promise.all(options.map(async (option, i) => {
+      console.log(i, option);
 
-        sharp(data.path).extract(options[i]).toFile(fileName)
-            .then(() => {
-                const end = Date.now();
-                spinner.success({ text: `Success! Saved image faces at ${data.savePath}` });
-                console.log(chalk.blueBright(`Process took ${end - start} ms`));
-                process.exit(0);
-            })
-            .catch((err) => {
-                spinner.error({ text: "Failed to process skybox!" });
-                console.log(err);
-                process.exit(1);
-            }
-        );
-    }
+      const fileName = path.join(data.savePath, `${indexToFaceName[i]}.png`);
+
+      await sharp(data.path).extract(option).toFile(fileName);
+    }));
+
+    const end = Date.now();
+    spinner.success({ text: `Success! Saved image faces at ${data.savePath}` });
+    console.log(chalk.blueBright(`Process took ${end - start} ms`));
+  } catch(err) {
+    spinner.error({ text: "Failed to process skybox!" });
+    console.log(err);
+    throw err;
+  }
 }
 
 console.clear();
@@ -213,17 +209,17 @@ console.clear();
 await welcome();
 
 const data = {
-    path:     await askPath(),
-    faceSize: await askFaceSize(),
-    savePath: await askSavePath(), 
-    layout:   await askLayout()
+  path:     await askPath(),
+  faceSize: await askFaceSize(),
+  savePath: await askSavePath(), 
+  layout:   await askLayout()
 };
 
 askConfirmation(data).then((confirmation) => {
-    if(confirmation) {
-        processTexture(data);
-    } else {
-        console.log(chalk.bgCyan("Aborting process..."));
-        process.exit(1);
-    }
+  if(confirmation) {
+    processTexture(data);
+  } else {
+    console.log(chalk.bgCyan("Aborting process..."));
+    process.exit(1);
+  }
 });
