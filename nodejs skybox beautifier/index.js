@@ -187,8 +187,6 @@ async function processTexture(data) {
     const start = Date.now();
 
     await Promise.all(options.map(async (option, i) => {
-      console.log(i, option);
-
       const fileName = path.join(data.savePath, `${indexToFaceName[i]}.png`);
 
       await sharp(data.path).extract(option).toFile(fileName);
