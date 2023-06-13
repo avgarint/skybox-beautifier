@@ -9,7 +9,7 @@
 ## Screenshots
 ![image](https://user-images.githubusercontent.com/66020831/208423648-5562a49d-362d-4be4-a8b5-b11a86f7ce4d.png)
 
-## Used librairies
+## Used libraries
 - ``chalk``: [npm](https://www.npmjs.com/package/chalk) or [Github repository](https://github.com/chalk/chalk)
 - ``inquirer``: [npm](https://www.npmjs.com/package/inquirer) or [Github repository](https://github.com/SBoudrias/Inquirer.js)
 - ``gradient-string``: [npm](https://www.npmjs.com/package/gradient-string) or [Github repository](https://github.com/bokub/gradient-string)
