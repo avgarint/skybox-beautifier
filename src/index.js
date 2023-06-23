@@ -207,10 +207,10 @@ console.clear();
 await welcome();
 
 const data = {
-  path:     await askPath(),
+  path: await askPath(),
   faceSize: await askFaceSize(),
   savePath: await askSavePath(), 
-  layout:   await askLayout()
+  layout: await askLayout()
 };
 
 askConfirmation(data).then((confirmation) => {
