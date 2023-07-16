@@ -1,4 +1,4 @@
-# Skybox-Beautifier
+<h1 align="center">skybox-beautifier</h1>
 
 ![GitHub last commit](https://img.shields.io/github/last-commit/alexandreaero/Skybox-Beautifier)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/alexandreaero/Skybox-Beautifier)
