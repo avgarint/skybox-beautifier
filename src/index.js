@@ -48,7 +48,7 @@ const sleep = (ms = 2000) => new Promise((r) => setTimeout(r, ms));
  */
 async function welcome() {
   figlet("Skybox Beautifier", (err, data) => {
-    if(err) {
+    if (err) {
       console.log(err);
       return;
     }
@@ -214,7 +214,7 @@ const data = {
 };
 
 askConfirmation(data).then((confirmation) => {
-  if(confirmation) {
+  if (confirmation) {
     processTexture(data);
   } else {
     console.log(chalk.bgCyan("Aborting process..."));
