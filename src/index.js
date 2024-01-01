@@ -89,12 +89,12 @@ async function askPath() {
  */
 async function askFaceSize() {
   const prompt = await inquirer.prompt({
-    name: "face_size",
+    name: "faceSize",
     type: "number",
     message: "Select face size:"
   });
 
-  return prompt.face_size;
+  return prompt.faceSize;
 }
 
 /**
@@ -103,12 +103,12 @@ async function askFaceSize() {
  */
 async function askSavePath() {
   const prompt =  await inquirer.prompt({
-    name: "save_directory",
+    name: "saveDirectory",
     type: "input",
     message: "Select the save directory:"
   });
 
-  return prompt.save_directory;
+  return prompt.saveDirectory;
 }
 
 /**
