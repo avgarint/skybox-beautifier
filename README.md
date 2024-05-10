@@ -1,15 +1,12 @@
-<h1 align="center">skybox-beautifier</h1>
+# skybox-beautifier
 
-![GitHub last commit](https://img.shields.io/github/last-commit/alexandreaero/Skybox-Beautifier)
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/alexandreaero/Skybox-Beautifier)
-![Lines of code](https://img.shields.io/tokei/lines/github/alexandreaero/Skybox-Beautifier)
+Decompose a single skybox texture to 6 texture images for 6 faces.
 
-### Decompose a single skybox texture to 6 texture images for 6 faces!
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/66020831/208423648-5562a49d-362d-4be4-a8b5-b11a86f7ce4d.png" width="738px" />
+</p>
 
-## Screenshots
-![image](https://user-images.githubusercontent.com/66020831/208423648-5562a49d-362d-4be4-a8b5-b11a86f7ce4d.png)
-
-## Used libraries
+## Libraries
 - ``chalk``: [npm](https://www.npmjs.com/package/chalk) or [Github repository](https://github.com/chalk/chalk)
 - ``inquirer``: [npm](https://www.npmjs.com/package/inquirer) or [Github repository](https://github.com/SBoudrias/Inquirer.js)
 - ``gradient-string``: [npm](https://www.npmjs.com/package/gradient-string) or [Github repository](https://github.com/bokub/gradient-string)
