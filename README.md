@@ -1,6 +1,5 @@
 # skybox-beautifier
-
-Decompose a single skybox texture to 6 texture images for 6 faces.
+Split skybox into 6 images.
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/66020831/208423648-5562a49d-362d-4be4-a8b5-b11a86f7ce4d.png" width="738px" />
